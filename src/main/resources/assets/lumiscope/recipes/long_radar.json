@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "SES",
+    "ONO"
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:ender_pearl"
+    },
+    "A": {
+      "item": "lumiscope:radar_antenna"
+    },
+    "S": {
+      "item": "lumiscope:short_radar"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "result": {
+    "item": "lumiscope:long_radar",
+    "count": 1
+  }
+}

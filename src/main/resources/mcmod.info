@@ -1,0 +1,16 @@
+[
+{
+  "modid": "lumiscope",
+  "name": "Lumiscope",
+  "description": "Balanced, long distance radar mod.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Lumijiez"],
+  "credits": "Me :P",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
