@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
@@ -20,6 +21,7 @@ public class ShortRadar extends ItemBase {
     public ShortRadar() {
         super("short_radar");
         setMaxStackSize(1);
+        setMaxDamage(70);
     }
 
     @Override
@@ -34,29 +36,49 @@ public class ShortRadar extends ItemBase {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote) {
+            player.getHeldItem(hand).damageItem(1, player);
+
             boolean playerNearby = false;
 
-            ITextComponent message;
-            if (isPlayerNearby(world, player)) {
-                message = new TextComponentString("There are players within 200 meters!")
-                        .setStyle(new Style().setColor(TextFormatting.GREEN));
-            } else {
-                message = new TextComponentString("No players within 200 meters.")
-                        .setStyle(new Style().setColor(TextFormatting.RED));
+            for (EntityPlayer otherPlayer : world.playerEntities) {
+                if (!otherPlayer.equals(player) && player.getDistance(otherPlayer) <= 100) {
+                    playerNearby = true;
+                    String direction = getPlayerDirection(player, otherPlayer);
+                    ITextComponent message = new TextComponentString(otherPlayer.getName() + " to the " + direction + "!")
+                            .setStyle(new Style().setColor(TextFormatting.GREEN));
+                    player.sendMessage(message);
+                }
             }
 
-            player.sendMessage(message);
-            player.getCooldownTracker().setCooldown(this, 1200);
+            if (!playerNearby) {
+                ITextComponent noPlayersMessage = new TextComponentString("No players within 100 meters.")
+                        .setStyle(new Style().setColor(TextFormatting.RED));
+                player.sendMessage(noPlayersMessage);
+            }
+
+            player.getCooldownTracker().setCooldown(this, 200);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
     }
 
-    private boolean isPlayerNearby(World world, EntityPlayer player) {
-        for (EntityPlayer otherPlayer : world.playerEntities) {
-            if (!otherPlayer.equals(player) && player.getDistance(otherPlayer) <= 200) {
-                return true;
-            }
+    private String getPlayerDirection(EntityPlayer player, EntityPlayer otherPlayer) {
+        double deltaX = otherPlayer.posX - player.posX;
+        double deltaZ = otherPlayer.posZ - player.posZ;
+        double angle = MathHelper.atan2(deltaZ, deltaX) * (180 / Math.PI) - 90;
+        if (angle < 0) {
+            angle += 360;
         }
-        return false;
+
+        angle = (angle + 180) % 360;
+
+        if (angle >= 337.5 || angle < 22.5) return "north";
+        if (angle >= 22.5 && angle < 67.5) return "northeast";
+        if (angle >= 67.5 && angle < 112.5) return "east";
+        if (angle >= 112.5 && angle < 157.5) return "southeast";
+        if (angle >= 157.5 && angle < 202.5) return "south";
+        if (angle >= 202.5 && angle < 247.5) return "southwest";
+        if (angle >= 247.5 && angle < 292.5) return "west";
+        if (angle >= 292.5) return "northwest";
+        return "unknown direction";
     }
 }

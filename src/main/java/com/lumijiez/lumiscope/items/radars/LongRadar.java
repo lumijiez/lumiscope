@@ -23,6 +23,7 @@ public class LongRadar extends ItemBase {
     public LongRadar() {
         super("long_radar");
         setMaxStackSize(1);
+        setMaxDamage(100);
     }
 
     @Override
@@ -41,51 +42,54 @@ public class LongRadar extends ItemBase {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote) {
-            StringBuilder message = new StringBuilder();
-            boolean playerNearby = false;
+            player.getHeldItem(hand).damageItem(1, player);
 
-            ITextComponent warningMessage = new TextComponentString("WARNING: Cannot detect players less than 500 meters from you!")
+            ITextComponent warningMessage = new TextComponentString("WARNING: Cannot detect players less than 300 meters from you!")
                     .setStyle(new Style().setColor(TextFormatting.RED));
             player.sendMessage(warningMessage);
 
+            boolean playerNearby = false;
+
             for (EntityPlayer otherPlayer : world.playerEntities) {
                 if (!otherPlayer.equals(player)) {
-                    playerNearby = true;
-
                     double deltaX = otherPlayer.posX - player.posX;
                     double deltaZ = otherPlayer.posZ - player.posZ;
                     double distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
 
-                    if (distance <= 500) continue;
+                    if (distance <= 300) continue;
 
                     double angle = Math.atan2(deltaZ, deltaX);
                     double angleDegrees = Math.toDegrees(angle) - 90;
                     angleDegrees = (angleDegrees + 360) % 360;
 
+                    angleDegrees = (angleDegrees > 180) ? angleDegrees - 360 : angleDegrees;
+
                     double margin = RANDOM.nextDouble() * 20;
                     double halfMargin = margin / 2;
 
                     double startAngle = (angleDegrees - halfMargin + 360) % 360;
+                    startAngle = (startAngle > 180) ? startAngle - 360 : startAngle;
+
                     double endAngle = (angleDegrees + halfMargin + 360) % 360;
+                    endAngle = (endAngle > 180) ? endAngle - 360 : endAngle;
 
                     String distanceMessage = distance > 50000 ? " (very far)" : "";
 
                     ITextComponent intervalMessage;
                     if (startAngle > endAngle) {
-                        intervalMessage = new TextComponentString(String.format("Look in the interval (%.1f - %.1f degrees)%s", startAngle, endAngle, distanceMessage))
+                        intervalMessage = new TextComponentString(String.format("Look in the interval of %.1f - %.1f degrees%s", startAngle, endAngle, distanceMessage))
                                 .setStyle(new Style().setColor(TextFormatting.GREEN));
                     } else {
-                        intervalMessage = new TextComponentString(String.format("Look in the interval (%.1f - %.1f degrees)%s", startAngle, endAngle, distanceMessage))
+                        intervalMessage = new TextComponentString(String.format("Look in the interval of %.1f - %.1f degrees%s", startAngle, endAngle, distanceMessage))
                                 .setStyle(new Style().setColor(TextFormatting.GREEN));
                     }
 
-                    message.append(intervalMessage.getFormattedText()).append("\n");
+                    player.sendMessage(intervalMessage);
+                    playerNearby = true;
                 }
             }
 
-            if (playerNearby) {
-                player.sendMessage(new TextComponentString(message.toString()));
-            } else {
+            if (!playerNearby) {
                 ITextComponent noPlayersMessage = new TextComponentString("No other players found.")
                         .setStyle(new Style().setColor(TextFormatting.GRAY));
                 player.sendMessage(noPlayersMessage);
