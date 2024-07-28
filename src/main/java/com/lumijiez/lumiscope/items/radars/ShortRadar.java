@@ -3,7 +3,9 @@ package com.lumijiez.lumiscope.items.radars;
 import com.lumijiez.lumiscope.items.ItemBase;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -26,10 +28,12 @@ public class ShortRadar extends ItemBase {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        ITextComponent info = new TextComponentString("Checks for nearby players.")
-                .setStyle(new Style().setColor(TextFormatting.AQUA));
-        tooltip.add(info.getFormattedText());
+        tooltip.add(new TextComponentString("Checks for nearby players.")
+                .setStyle(new Style().setColor(TextFormatting.AQUA)).getFormattedText());
 
+        tooltip.add(new TextComponentString("Does not detect invisible players!")
+                        .setStyle(new Style().setColor(TextFormatting.DARK_RED).setBold(true).setItalic(true)).getFormattedText());
+        
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
@@ -41,7 +45,12 @@ public class ShortRadar extends ItemBase {
             boolean playerNearby = false;
 
             for (EntityPlayer otherPlayer : world.playerEntities) {
-                if (!otherPlayer.equals(player) && player.getDistance(otherPlayer) <= 100) {
+
+                if (!otherPlayer.equals(player)
+                        && player.getDistance(otherPlayer) <= 100
+                        && otherPlayer.getActivePotionEffects().stream()
+                        .noneMatch(potionEffect -> potionEffect.getPotion() == MobEffects.INVISIBILITY)) {
+
                     playerNearby = true;
                     String direction = getPlayerDirection(player, otherPlayer);
                     ITextComponent message = new TextComponentString(otherPlayer.getName() + " to the " + direction + "!")
@@ -51,7 +60,7 @@ public class ShortRadar extends ItemBase {
             }
 
             if (!playerNearby) {
-                ITextComponent noPlayersMessage = new TextComponentString("No players within 100 meters.")
+                ITextComponent noPlayersMessage = new TextComponentString("Could not detect players within 100 meters.")
                         .setStyle(new Style().setColor(TextFormatting.RED));
                 player.sendMessage(noPlayersMessage);
             }

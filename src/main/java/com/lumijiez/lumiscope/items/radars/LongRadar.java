@@ -3,6 +3,7 @@ package com.lumijiez.lumiscope.items.radars;
 import com.lumijiez.lumiscope.items.ItemBase;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -36,6 +37,10 @@ public class LongRadar extends ItemBase {
                 .setStyle(new Style().setColor(TextFormatting.RED));
         tooltip.add(warning.getFormattedText());
 
+        tooltip.add(new TextComponentString("Does not detect invisible players!")
+                .setStyle(new Style().setColor(TextFormatting.DARK_RED).setBold(true).setItalic(true)).getFormattedText());
+
+
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
@@ -51,7 +56,10 @@ public class LongRadar extends ItemBase {
             boolean playerNearby = false;
 
             for (EntityPlayer otherPlayer : world.playerEntities) {
-                if (!otherPlayer.equals(player)) {
+                if (!otherPlayer.equals(player)
+                    && otherPlayer.getActivePotionEffects().stream()
+                        .noneMatch(potionEffect -> potionEffect.getPotion() == MobEffects.INVISIBILITY)) {
+
                     double deltaX = otherPlayer.posX - player.posX;
                     double deltaZ = otherPlayer.posZ - player.posZ;
                     double distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
@@ -73,16 +81,15 @@ public class LongRadar extends ItemBase {
                     double endAngle = (angleDegrees + halfMargin + 360) % 360;
                     endAngle = (endAngle > 180) ? endAngle - 360 : endAngle;
 
-                    String distanceMessage = distance > 50000 ? " (very far)" : "";
+                    String distanceMessage = distance > 500000 ? " (extremely far)" :
+                            distance > 50000 ? " (very far)" :
+                                    distance > 5000 ? " (far)" : "";
+
 
                     ITextComponent intervalMessage;
-                    if (startAngle > endAngle) {
-                        intervalMessage = new TextComponentString(String.format("Look in the interval of %.1f - %.1f degrees%s", startAngle, endAngle, distanceMessage))
-                                .setStyle(new Style().setColor(TextFormatting.GREEN));
-                    } else {
-                        intervalMessage = new TextComponentString(String.format("Look in the interval of %.1f - %.1f degrees%s", startAngle, endAngle, distanceMessage))
-                                .setStyle(new Style().setColor(TextFormatting.GREEN));
-                    }
+
+                    intervalMessage = new TextComponentString(String.format("Look in the interval of %.1f - %.1f degrees%s", startAngle, endAngle, distanceMessage))
+                            .setStyle(new Style().setColor(TextFormatting.GREEN));
 
                     player.sendMessage(intervalMessage);
                     playerNearby = true;
@@ -90,7 +97,7 @@ public class LongRadar extends ItemBase {
             }
 
             if (!playerNearby) {
-                ITextComponent noPlayersMessage = new TextComponentString("No other players found.")
+                ITextComponent noPlayersMessage = new TextComponentString("No players found.")
                         .setStyle(new Style().setColor(TextFormatting.GRAY));
                 player.sendMessage(noPlayersMessage);
             }
