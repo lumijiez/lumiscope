@@ -26,7 +26,7 @@ public class RadarPacketHandler {
         for (EntityPlayerMP otherPlayer : player.getServerWorld().getMinecraftServer().getPlayerList().getPlayers()) {
             if (!otherPlayer.equals(player) && player.getDistance(otherPlayer) <= 100) {
                 double direction = getPlayerDirection(player, otherPlayer);
-                playerInfos.add(new RadarPacket.PlayerInfo(otherPlayer.getName(), direction));
+                playerInfos.add(new RadarPacket.PlayerInfo(otherPlayer.getName(), direction, player.getDistance(otherPlayer)));
             }
         }
         INSTANCE.sendTo(new RadarPacket(playerInfos), player);

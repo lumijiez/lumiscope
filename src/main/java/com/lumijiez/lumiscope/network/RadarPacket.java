@@ -14,12 +14,13 @@ public class RadarPacket implements IMessage {
     public static class PlayerInfo {
         public String name;
         public double direction;
+        public double distance;
 
-        public PlayerInfo(String name, double direction) {
+        public PlayerInfo(String name, double direction, double distance) {
             this.name = name;
             this.direction = direction;
+            this.distance = distance;
         }
-
     }
 
     private List<PlayerInfo> playerInfos;
@@ -40,6 +41,7 @@ public class RadarPacket implements IMessage {
             buf.writeInt(nameBytes.length);
             buf.writeBytes(nameBytes);
             buf.writeDouble(info.direction);
+            buf.writeDouble(info.distance);
         }
     }
 
@@ -53,7 +55,8 @@ public class RadarPacket implements IMessage {
             buf.readBytes(nameBytes);
             String name = new String(nameBytes);
             double direction = buf.readDouble();
-            playerInfos.add(new PlayerInfo(name, direction));
+            double distance = buf.readDouble();
+            playerInfos.add(new PlayerInfo(name, direction, distance));
         }
     }
 

@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.wrapper.PlayerOffhandInvWrapper;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -58,7 +59,7 @@ public class ShortRadarRenderer {
 
     private void renderRadar(float partialTicks) {
         GlStateManager.pushMatrix();
-        GlStateManager.translate(0, 0, 0);
+        GlStateManager.translate(0, 0.01, 0);
 
         mc.getTextureManager().bindTexture(radarTexture);
 
@@ -66,13 +67,22 @@ public class ShortRadarRenderer {
         GlStateManager.disableLighting();
         GlStateManager.disableCull();
 
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 0.5f);
+
         drawTexturedCircle(1.4f);
 
         for (RadarPacket.PlayerInfo info : playerInfos) {
             double angle = info.direction - Math.toRadians(90);
             drawTexturedLine(1.4f, angle);
         }
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+        GlStateManager.disableBlend();
 
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableCull();
         for (RadarPacket.PlayerInfo info : playerInfos) {
             double angle = info.direction - Math.toRadians(90);
             GlStateManager.pushMatrix();
@@ -82,13 +92,14 @@ public class ShortRadarRenderer {
             GlStateManager.rotate((float) Math.toDegrees(angle), 0, 0, 1);
             GlStateManager.scale(0.01, 0.01, 0.01);
 
-            RenderHelper.disableStandardItemLighting();
-            GlStateManager.enableTexture2D();
-            mc.fontRenderer.drawStringWithShadow(info.name, -mc.fontRenderer.getStringWidth(info.name) - 50 , -4, 0xAAFF00);
-            GlStateManager.disableTexture2D();
-            RenderHelper.enableStandardItemLighting();
+            mc.fontRenderer.drawStringWithShadow(info.name, -mc.fontRenderer.getStringWidth(info.name) - 50 , -4, 0x808080);
+            mc.fontRenderer.drawStringWithShadow("(" + (int) info.distance +"m)", -mc.fontRenderer.getStringWidth(info.name) + 5 , -4, interpolateColor(100, 0, (int) info.distance));
+
             GlStateManager.popMatrix();
         }
+        GlStateManager.disableCull();
+        GlStateManager.disableTexture2D();
+        RenderHelper.enableStandardItemLighting();
 
         GlStateManager.enableDepth();
         GlStateManager.enableLighting();
@@ -151,5 +162,16 @@ public class ShortRadarRenderer {
         GlStateManager.popMatrix();
 
         GlStateManager.disableTexture2D();
+    }
+
+    private int interpolateColor(int maxDistance, int minDistance, int currentDistance) {
+        int clampedDistance = Math.max(minDistance, Math.min(maxDistance, currentDistance));
+        float ratio = (float) (maxDistance - clampedDistance) / (maxDistance - minDistance);
+
+        int r = (int) (ratio * 255);
+        int g = (int) ((1 - ratio) * 255);
+        int b = 0;
+
+        return new Color(r, g, b).getRGB();
     }
 }
