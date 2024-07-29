@@ -24,7 +24,6 @@ public class LongRadar extends ItemBase {
     public LongRadar() {
         super("long_radar");
         setMaxStackSize(1);
-        setMaxDamage(100);
     }
 
     @Override

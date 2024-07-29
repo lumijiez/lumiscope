@@ -1,32 +1,33 @@
-package com.lumijiez.lumiscope.handlers;
+package com.lumijiez.lumiscope.render;
 
 import com.lumijiez.lumiscope.items.radars.ShortRadar;
 import com.lumijiez.lumiscope.network.RadarPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderDragon;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.wrapper.PlayerOffhandInvWrapper;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class RadarRenderer {
+public class ShortRadarRenderer {
     private static final Minecraft mc = Minecraft.getMinecraft();
-    private static final RadarRenderer INSTANCE = new RadarRenderer();
+    private static final ShortRadarRenderer INSTANCE = new ShortRadarRenderer();
     private final ResourceLocation radarTexture = new ResourceLocation("lumiscope", "textures/gui/radar.png");
     private final ResourceLocation radarArrowTexture = new ResourceLocation("lumiscope", "textures/gui/radar_arrow.png");
     private List<RadarPacket.PlayerInfo> playerInfos;
 
-    private RadarRenderer() {}
+    private ShortRadarRenderer() {}
 
-    public static RadarRenderer getInstance() {
+    public static ShortRadarRenderer getInstance() {
         return INSTANCE;
     }
 
@@ -40,6 +41,13 @@ public class RadarRenderer {
             if (playerInfos != null && !playerInfos.isEmpty()) {
                 renderRadar(event.getPartialTicks());
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderPlayerHand(RenderHandEvent event) {
+        if (mc.player.getHeldItemMainhand().getItem() instanceof ShortRadar) {
+            event.setCanceled(true);
         }
     }
 
@@ -62,7 +70,7 @@ public class RadarRenderer {
 
         for (RadarPacket.PlayerInfo info : playerInfos) {
             double angle = info.direction - Math.toRadians(90);
-            drawTexturedLine(1.4f, angle, radarArrowTexture);
+            drawTexturedLine(1.4f, angle);
         }
 
         for (RadarPacket.PlayerInfo info : playerInfos) {
@@ -116,8 +124,8 @@ public class RadarRenderer {
         GlStateManager.disableTexture2D();
     }
 
-    private void drawTexturedLine(float length, double angle, ResourceLocation texture) {
-        mc.getTextureManager().bindTexture(texture);
+    private void drawTexturedLine(float length, double angle) {
+        mc.getTextureManager().bindTexture(radarArrowTexture);
 
         GlStateManager.enableTexture2D();
 

@@ -1,6 +1,6 @@
 package com.lumijiez.lumiscope.network;
 
-import com.lumijiez.lumiscope.handlers.RadarRenderer;
+import com.lumijiez.lumiscope.render.ShortRadarRenderer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -61,7 +61,7 @@ public class RadarPacket implements IMessage {
         @Override
         public IMessage onMessage(RadarPacket message, MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> {
-                RadarRenderer renderer = RadarRenderer.getInstance();
+                ShortRadarRenderer renderer = ShortRadarRenderer.getInstance();
                 renderer.updatePlayerInfos(message.playerInfos);
             });
             return null;

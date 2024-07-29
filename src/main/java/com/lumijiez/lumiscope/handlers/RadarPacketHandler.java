@@ -25,7 +25,6 @@ public class RadarPacketHandler {
         List<RadarPacket.PlayerInfo> playerInfos = new ArrayList<>();
         for (EntityPlayerMP otherPlayer : player.getServerWorld().getMinecraftServer().getPlayerList().getPlayers()) {
             if (!otherPlayer.equals(player) && player.getDistance(otherPlayer) <= 100) {
-                //String direction = getPlayerDirection(player, otherPlayer);
                 double direction = getPlayerDirection(player, otherPlayer);
                 playerInfos.add(new RadarPacket.PlayerInfo(otherPlayer.getName(), direction));
             }
@@ -38,9 +37,7 @@ public class RadarPacketHandler {
         double deltaZ = otherPlayer.posZ - player.posZ;
 
         double angle = MathHelper.atan2(deltaZ, deltaX) * (180 / Math.PI) - 90;
-        if (angle < 0) {
-            angle += 360;
-        }
+        if (angle < 0) angle += 360;
 
         angle = (angle + 180) % 360;
         return Math.toRadians(angle);

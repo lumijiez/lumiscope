@@ -1,7 +1,7 @@
 package com.lumijiez.lumiscope;
 
 import com.lumijiez.lumiscope.handlers.RadarPacketHandler;
-import com.lumijiez.lumiscope.handlers.RadarRenderer;
+import com.lumijiez.lumiscope.render.ShortRadarRenderer;
 import com.lumijiez.lumiscope.proxy.CommonProxy;
 import com.lumijiez.lumiscope.util.Ref;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -35,7 +35,7 @@ public class Lumiscope {
     public void init(FMLInitializationEvent event)
     {
         if (event.getSide() == Side.CLIENT) {
-            MinecraftForge.EVENT_BUS.register(RadarRenderer.getInstance());
+            MinecraftForge.EVENT_BUS.register(ShortRadarRenderer.getInstance());
         }
     }
 
