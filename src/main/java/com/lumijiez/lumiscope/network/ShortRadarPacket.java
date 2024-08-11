@@ -1,6 +1,6 @@
 package com.lumijiez.lumiscope.network;
 
-import com.lumijiez.lumiscope.render.ShortRadarRenderer;
+import com.lumijiez.lumiscope.render.radar.ShortRadarRenderer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RadarPacket implements IMessage {
+public class ShortRadarPacket implements IMessage {
     public static class PlayerInfo {
         public String name;
         public double direction;
@@ -25,11 +25,11 @@ public class RadarPacket implements IMessage {
 
     private List<PlayerInfo> playerInfos;
 
-    public RadarPacket() {
+    public ShortRadarPacket() {
         this.playerInfos = new ArrayList<>();
     }
 
-    public RadarPacket(List<PlayerInfo> playerInfos) {
+    public ShortRadarPacket(List<PlayerInfo> playerInfos) {
         this.playerInfos = playerInfos;
     }
 
@@ -60,9 +60,9 @@ public class RadarPacket implements IMessage {
         }
     }
 
-    public static class Handler implements IMessageHandler<RadarPacket, IMessage> {
+    public static class Handler implements IMessageHandler<ShortRadarPacket, IMessage> {
         @Override
-        public IMessage onMessage(RadarPacket message, MessageContext ctx) {
+        public IMessage onMessage(ShortRadarPacket message, MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> {
                 ShortRadarRenderer renderer = ShortRadarRenderer.getInstance();
                 renderer.updatePlayerInfos(message.playerInfos);
