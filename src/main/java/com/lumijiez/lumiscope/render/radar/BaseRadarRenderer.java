@@ -1,5 +1,6 @@
 package com.lumijiez.lumiscope.render.radar;
 
+import com.lumijiez.lumiscope.network.records.PlayerInfo;
 import com.lumijiez.lumiscope.util.GLHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -8,22 +9,22 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-public abstract class BaseRadarRenderer<T> {
+public abstract class BaseRadarRenderer {
 
     protected static final Minecraft mc = Minecraft.getMinecraft();
     protected final ResourceLocation radarTexture = new ResourceLocation("lumiscope", "textures/gui/radar.png");
     protected final ResourceLocation radarArrowTexture = new ResourceLocation("lumiscope", "textures/gui/radar_arrow.png");
-    protected List<T> playerInfos;
+    protected List<PlayerInfo> playerInfos;
 
     protected abstract void drawTexturedCircle(float radius);
 
     protected abstract void drawTexturedLine(float length, double angle);
 
-    protected abstract double getDirection(T info);
+    protected abstract double getDirection(PlayerInfo info);
 
     protected abstract boolean shouldRenderRadar();
 
-    public void updatePlayerInfos(List<T> playerInfos) {
+    public void updatePlayerInfos(List<PlayerInfo> playerInfos) {
         this.playerInfos = playerInfos;
     }
 
@@ -36,7 +37,7 @@ public abstract class BaseRadarRenderer<T> {
         GLHelper.setupForRadarRendering();
         drawTexturedCircle(1.4f);
 
-        for (T info : playerInfos) {
+        for (PlayerInfo info : playerInfos) {
             double angle = getDirection(info) - Math.toRadians(90);
             drawTexturedLine(1.4f, angle);
         }

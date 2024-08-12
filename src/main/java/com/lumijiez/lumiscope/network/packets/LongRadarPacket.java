@@ -1,6 +1,8 @@
-package com.lumijiez.lumiscope.network;
+package com.lumijiez.lumiscope.network.packets;
 
-import com.lumijiez.lumiscope.render.radar.ShortRadarRenderer;
+import com.lumijiez.lumiscope.network.records.PlayerInfo;
+import com.lumijiez.lumiscope.render.radar.LongRadarRenderer;
+import com.lumijiez.lumiscope.util.Ref;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -10,26 +12,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShortRadarPacket implements IMessage {
-    public static class PlayerInfo {
-        public String name;
-        public double direction;
-        public double distance;
-
-        public PlayerInfo(String name, double direction, double distance) {
-            this.name = name;
-            this.direction = direction;
-            this.distance = distance;
-        }
-    }
+public class LongRadarPacket implements IMessage {
 
     private List<PlayerInfo> playerInfos;
 
-    public ShortRadarPacket() {
+    public LongRadarPacket() {
         this.playerInfos = new ArrayList<>();
     }
 
-    public ShortRadarPacket(List<PlayerInfo> playerInfos) {
+    public LongRadarPacket(List<PlayerInfo> playerInfos) {
         this.playerInfos = playerInfos;
     }
 
@@ -60,12 +51,13 @@ public class ShortRadarPacket implements IMessage {
         }
     }
 
-    public static class Handler implements IMessageHandler<ShortRadarPacket, IMessage> {
+    public static class Handler implements IMessageHandler<LongRadarPacket, IMessage> {
         @Override
-        public IMessage onMessage(ShortRadarPacket message, MessageContext ctx) {
+        public IMessage onMessage(LongRadarPacket message, MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> {
-                ShortRadarRenderer renderer = ShortRadarRenderer.getInstance();
+                LongRadarRenderer renderer = LongRadarRenderer.getInstance();
                 renderer.updatePlayerInfos(message.playerInfos);
+                Ref.logger.info("RECEIVED LONG PACKET");
             });
             return null;
         }

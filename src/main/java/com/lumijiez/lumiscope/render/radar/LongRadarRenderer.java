@@ -1,7 +1,7 @@
 package com.lumijiez.lumiscope.render.radar;
 
 import com.lumijiez.lumiscope.items.radars.LongRadar;
-import com.lumijiez.lumiscope.network.LongRadarPacket;
+import com.lumijiez.lumiscope.network.records.PlayerInfo;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class LongRadarRenderer extends BaseRadarRenderer<LongRadarPacket.PlayerInfo> {
+public class LongRadarRenderer extends BaseRadarRenderer {
     private static final LongRadarRenderer INSTANCE = new LongRadarRenderer();
 
     private LongRadarRenderer() {}
@@ -51,7 +51,7 @@ public class LongRadarRenderer extends BaseRadarRenderer<LongRadarPacket.PlayerI
     }
 
     @Override
-    protected double getDirection(LongRadarPacket.PlayerInfo info) {
+    protected double getDirection(PlayerInfo info) {
         return info.direction;
     }
 }

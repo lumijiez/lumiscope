@@ -1,6 +1,8 @@
-package com.lumijiez.lumiscope.network;
+package com.lumijiez.lumiscope.network.packets;
 
-import com.lumijiez.lumiscope.render.radar.LongRadarRenderer;
+import com.lumijiez.lumiscope.network.records.PlayerInfo;
+import com.lumijiez.lumiscope.render.radar.ShortRadarRenderer;
+import com.lumijiez.lumiscope.util.Ref;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -10,26 +12,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LongRadarPacket implements IMessage {
-    public static class PlayerInfo {
-        public String name;
-        public double direction;
-        public double distance;
-
-        public PlayerInfo(String name, double direction, double distance) {
-            this.name = "none";
-            this.direction = direction;
-            this.distance = 0;
-        }
-    }
-
+public class ShortRadarPacket implements IMessage {
     private List<PlayerInfo> playerInfos;
 
-    public LongRadarPacket() {
+    public ShortRadarPacket() {
         this.playerInfos = new ArrayList<>();
     }
 
-    public LongRadarPacket(List<PlayerInfo> playerInfos) {
+    public ShortRadarPacket(List<PlayerInfo> playerInfos) {
         this.playerInfos = playerInfos;
     }
 
@@ -60,12 +50,13 @@ public class LongRadarPacket implements IMessage {
         }
     }
 
-    public static class Handler implements IMessageHandler<LongRadarPacket, IMessage> {
+    public static class Handler implements IMessageHandler<ShortRadarPacket, IMessage> {
         @Override
-        public IMessage onMessage(LongRadarPacket message, MessageContext ctx) {
+        public IMessage onMessage(ShortRadarPacket message, MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> {
-                LongRadarRenderer renderer = LongRadarRenderer.getInstance();
+                ShortRadarRenderer renderer = ShortRadarRenderer.getInstance();
                 renderer.updatePlayerInfos(message.playerInfos);
+                Ref.logger.info("RECEIVED SHORT PACKET");
             });
             return null;
         }

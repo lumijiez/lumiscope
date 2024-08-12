@@ -18,6 +18,7 @@ public class LongRadar extends ItemBase {
     public LongRadar() {
         super("long_radar");
         setMaxStackSize(1);
+        setMaxDamage(1000);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class LongRadar extends ItemBase {
         tooltip.add(warning.getFormattedText());
 
         tooltip.add(new TextComponentString("Does not detect invisible players!")
-                .setStyle(new Style().setColor(TextFormatting.DARK_RED).setBold(true).setItalic(true)).getFormattedText());
+                .setStyle(new Style().setColor(TextFormatting.DARK_RED).setItalic(true)).getFormattedText());
 
 
         super.addInformation(stack, worldIn, tooltip, flagIn);

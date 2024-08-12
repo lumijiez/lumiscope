@@ -1,7 +1,7 @@
 package com.lumijiez.lumiscope.render.radar;
 
 import com.lumijiez.lumiscope.items.radars.ShortRadar;
-import com.lumijiez.lumiscope.network.ShortRadarPacket;
+import com.lumijiez.lumiscope.network.records.PlayerInfo;
 import com.lumijiez.lumiscope.util.CustomMath;
 import com.lumijiez.lumiscope.util.GLHelper;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ShortRadarRenderer extends BaseRadarRenderer<ShortRadarPacket.PlayerInfo> {
+public class ShortRadarRenderer extends BaseRadarRenderer {
     private static final ShortRadarRenderer INSTANCE = new ShortRadarRenderer();
 
     private ShortRadarRenderer() {}
@@ -47,14 +47,14 @@ public class ShortRadarRenderer extends BaseRadarRenderer<ShortRadarPacket.Playe
         GLHelper.setupForRadarRendering();
         drawTexturedCircle(1.4f);
 
-        for (ShortRadarPacket.PlayerInfo info : playerInfos) {
+        for (PlayerInfo info : playerInfos) {
             double angle = getDirection(info) - Math.toRadians(90);
             drawTexturedLine(1.4f, angle);
         }
 
         GLHelper.setupForTextRendering();
 
-        for (ShortRadarPacket.PlayerInfo info : playerInfos) {
+        for (PlayerInfo info : playerInfos) {
             double angle = info.direction - Math.toRadians(90);
             GlStateManager.pushMatrix();
             GlStateManager.translate((float) (Math.cos(angle) * 1.2), 0.001, (float) (Math.sin(angle) * 1.2));
@@ -91,7 +91,7 @@ public class ShortRadarRenderer extends BaseRadarRenderer<ShortRadarPacket.Playe
     }
 
     @Override
-    protected double getDirection(ShortRadarPacket.PlayerInfo info) {
+    protected double getDirection(PlayerInfo info) {
         return info.direction;
     }
 }

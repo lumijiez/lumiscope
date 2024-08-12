@@ -16,6 +16,7 @@ public class ShortRadar extends ItemBase {
     public ShortRadar() {
         super("short_radar");
         setMaxStackSize(1);
+        setMaxDamage(1000);
     }
 
     @Override
