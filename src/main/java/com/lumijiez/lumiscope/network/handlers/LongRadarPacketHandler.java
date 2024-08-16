@@ -51,6 +51,7 @@ public class LongRadarPacketHandler {
     private static boolean shouldIncludePlayer(EntityPlayerMP player, EntityPlayerMP otherPlayer) {
         return !otherPlayer.equals(player)
                 && player.getDistance(otherPlayer) >= 300
+                && player.dimension == otherPlayer.dimension
                 && !otherPlayer.isPotionActive(PotionManager.JAMMERED_POTION_EFFECT);
     }
 }

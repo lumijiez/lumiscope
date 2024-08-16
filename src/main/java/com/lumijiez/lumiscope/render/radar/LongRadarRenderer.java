@@ -2,6 +2,7 @@ package com.lumijiez.lumiscope.render.radar;
 
 import com.lumijiez.lumiscope.items.radars.LongRadar;
 import com.lumijiez.lumiscope.network.records.PlayerInfo;
+import com.lumijiez.lumiscope.potions.PotionManager;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -36,8 +37,10 @@ public class LongRadarRenderer extends BaseRadarRenderer {
 
     @Override
     protected boolean shouldRenderRadar() {
-        return mc.player.getHeldItemMainhand().getItem() instanceof LongRadar ||
-                mc.player.getHeldItemOffhand().getItem() instanceof LongRadar;
+        return (mc.player.getHeldItemMainhand().getItem() instanceof LongRadar
+                || mc.player.getHeldItemOffhand().getItem() instanceof LongRadar)
+                && !mc.player.isPotionActive(PotionManager.JAMMERED_POTION_EFFECT);
+
     }
 
     @Override

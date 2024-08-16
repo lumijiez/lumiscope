@@ -1,7 +1,9 @@
 package com.lumijiez.lumiscope.render.radar;
 
+import com.lumijiez.lumiscope.items.radars.LongRadar;
 import com.lumijiez.lumiscope.items.radars.ShortRadar;
 import com.lumijiez.lumiscope.network.records.PlayerInfo;
+import com.lumijiez.lumiscope.potions.PotionManager;
 import com.lumijiez.lumiscope.util.CustomMath;
 import com.lumijiez.lumiscope.util.GLHelper;
 import net.minecraft.client.renderer.GlStateManager;
@@ -76,8 +78,9 @@ public class ShortRadarRenderer extends BaseRadarRenderer {
 
     @Override
     protected boolean shouldRenderRadar() {
-        return mc.player.getHeldItemMainhand().getItem() instanceof ShortRadar ||
-                mc.player.getHeldItemOffhand().getItem() instanceof ShortRadar;
+        return (mc.player.getHeldItemMainhand().getItem() instanceof ShortRadar
+                || mc.player.getHeldItemOffhand().getItem() instanceof ShortRadar)
+                && !mc.player.isPotionActive(PotionManager.JAMMERED_POTION_EFFECT);
     }
 
     @Override

@@ -2,5 +2,5 @@ item.short_radar.name=Short Distance Radar
 item.long_radar.name=Long Distance Radar
 item.radar_antenna.name=Radar Antenna
 item.radar_screen.name=Radar Screen
-item.portable_jammer=Portable Jammer
+item.portable_jammer.name=Portable Jammer
 effect.jammered=Jammered

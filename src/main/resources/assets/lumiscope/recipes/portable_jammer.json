@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "OSO",
+    "OLO",
+    "OSO"
+  ],
+  "key": {
+    "S": {
+      "item": "lumiscope:short_radar"
+    },
+    "L": {
+      "item": "lumiscope:long_radar"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "result": {
+    "item": "lumiscope:portable_jammer",
+    "count": 1
+  }
+}

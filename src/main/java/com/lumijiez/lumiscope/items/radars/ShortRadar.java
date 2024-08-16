@@ -16,17 +16,17 @@ public class ShortRadar extends ItemBase {
     public ShortRadar() {
         super("short_radar");
         setMaxStackSize(1);
-        setMaxDamage(1000);
+        setMaxDamage(400);
     }
 
     @Override
     @ParametersAreNonnullByDefault
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new TextComponentString("Checks for nearby players.")
-                .setStyle(new Style().setColor(TextFormatting.AQUA)).getFormattedText());
+                .setStyle(new Style().setColor(TextFormatting.BLUE)).getFormattedText());
 
         tooltip.add(new TextComponentString("Does detect invisible players!")
-                .setStyle(new Style().setColor(TextFormatting.GREEN).setBold(true).setItalic(true)).getFormattedText());
+                .setStyle(new Style().setColor(TextFormatting.GREEN)).getFormattedText());
 
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }

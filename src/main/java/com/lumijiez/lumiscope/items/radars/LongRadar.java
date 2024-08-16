@@ -18,22 +18,18 @@ public class LongRadar extends ItemBase {
     public LongRadar() {
         super("long_radar");
         setMaxStackSize(1);
-        setMaxDamage(1000);
+        setMaxDamage(400);
     }
 
     @Override
     @ParametersAreNonnullByDefault
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         ITextComponent info = new TextComponentString("Checks for faraway players.")
-                .setStyle(new Style().setColor(TextFormatting.AQUA));
+                .setStyle(new Style().setColor(TextFormatting.BLUE));
         tooltip.add(info.getFormattedText());
 
-        ITextComponent warning = new TextComponentString("Can be imprecise!")
-                .setStyle(new Style().setColor(TextFormatting.RED));
-        tooltip.add(warning.getFormattedText());
-
         tooltip.add(new TextComponentString("Does not detect invisible players!")
-                .setStyle(new Style().setColor(TextFormatting.DARK_RED).setItalic(true)).getFormattedText());
+                .setStyle(new Style().setColor(TextFormatting.DARK_RED)).getFormattedText());
 
 
         super.addInformation(stack, worldIn, tooltip, flagIn);
