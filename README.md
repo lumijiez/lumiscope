@@ -1,13 +1,8 @@
 # Lumiscope
 
 Lumiscope is a Minecraft mod for version 1.12.2 that enhances gameplay with advanced radar and jammer tools. Designed to improve player interactions and strategy, this mod provides functionalities for detecting players and preventing detection.
-![2024-07-25_01 19 31-min](https://github.com/user-attachments/assets/a44aece5-a5cb-4bba-b7f7-263f64790001)
+![image](https://github.com/user-attachments/assets/2f02a96a-c286-444e-9200-182f347431a6)
 
-
-![2024-07-25_01 19 57-min](https://github.com/user-attachments/assets/fdcd7395-9f04-4d31-9582-7e7977c9a26f)
-
-
-![2024-07-25_01 20 43-min](https://github.com/user-attachments/assets/a72a3788-c81b-499c-bd17-eb81ab96b24d)
 ## Features
 
 - **ShortRangeRadar**: Detects players within a 100m radius with high precision. Ideal for close-range monitoring and tactical gameplay.
